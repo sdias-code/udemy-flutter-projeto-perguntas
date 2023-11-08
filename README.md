@@ -16,6 +16,6 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Comandos
-- Atualizando o projeto:
-flutter upgrade
-dart pub get
+### Atualizando o projeto:
+- flutter upgrade
+- dart pub get
