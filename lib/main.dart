@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'questao.dart';
 import 'resposta.dart';
@@ -6,52 +5,63 @@ import 'resposta.dart';
 main() => runApp(const PerguntaApp());
 
 class PerguntaAppState extends State<PerguntaApp> {
-  var perguntaSelecionada = 0;
+  var _perguntaSelecionada = 0;
 
-  void responder() {
-    setState(() {
-      perguntaSelecionada++;
-    });
-
-    if (kDebugMode) {
-      print(perguntaSelecionada);
+  final List<Map<String, Object>> _perguntas = const [
+    {
+      'pergunta': 'Qual sua cor favorita?',
+      'respostas': ['Preto', 'Azul', 'Amarelo', 'Verde'],
+    },
+    {
+      'pergunta': 'Qual seu animal favorito?',
+      'respostas': ['Jacaré', 'Leão', 'Zebra', 'Cachorro'],
+    },
+    {
+      'pergunta': 'Qual seu instrutor favorito?',
+      'respostas': ['Pedro', 'João', 'André', 'Joana'],
     }
+  ];
+
+  void _responder() {
+    if (temPerguntaSelecionada) {
+      setState(() {
+        _perguntaSelecionada++;
+      });
+    }
+  }
+
+  bool get temPerguntaSelecionada {
+    return _perguntaSelecionada < _perguntas.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, Object>> perguntas = [
-      {
-        'pergunta': 'Qual sua cor favorita?',
-        'respostas': ['Preto', 'Azul', 'Amarelo', 'Verde'],
-      },
-      {
-        'pergunta': 'Qual seu animal favorito?',
-        'respostas': ['Jacaré', 'Leão', 'Zebra', 'Cachorro'],
-      },
-      {
-        'pergunta': 'Qual seu instrutor favorito?',
-        'respostas': ['Pedro', 'João', 'André', 'Joana'],
-      }
-    ];
+    // List<Widget> respostas = [];
 
-    List<Widget> respostas = [];
+    // for (var resp in _perguntas[_perguntaSelecionada]['respostas'] as List) {
+    //   respostas.add(Resposta(resp, responder));
+    // }
 
-    for (var resp in perguntas[perguntaSelecionada]['respostas'] as List) {
-      respostas.add(Resposta(resp, responder));
-    }
+    List<String> respostas = temPerguntaSelecionada
+        ? _perguntas[_perguntaSelecionada]['respostas'] as List<String>
+        : [];
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Perguntas'),
         ),
-        body: Column(
-          children: [
-            Questao(perguntas[perguntaSelecionada]['pergunta'].toString()),
-            ...respostas,
-          ],
-        ),
+        body: temPerguntaSelecionada
+            ? Column(
+                children: <Widget>[
+                  Questao(
+                      _perguntas[_perguntaSelecionada]['pergunta'].toString()),
+                  ...respostas
+                      .map((resp) => Resposta(resp, _responder))
+                      .toList(),
+                ],
+              )
+            : null,
       ),
     );
   }
